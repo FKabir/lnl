@@ -19,7 +19,7 @@ module.exports = function(grunt) {
 
 		simplemocha: {
 			all: {
-				src: 'tests/**/*.spec.js',
+				src: 'test/**/*.spec.js',
 				options: {
 					timeout: 5000,
 					ignoreLeaks: false,
@@ -30,10 +30,8 @@ module.exports = function(grunt) {
 		}
 
 	});
-
 	grunt.loadNpmTasks('grunt-simple-mocha');
 	grunt.loadNpmTasks('grunt-contrib-less');
-	grunt.registerTask('test', 'simplemocha');
-	grunt.registerTask('less', 'less');
+	grunt.registerTask('test', ['simplemocha']);
 	grunt.registerTask('development', 'less:development');
 }

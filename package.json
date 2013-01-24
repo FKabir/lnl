@@ -1,16 +1,20 @@
 {
-  "name": "application-name",
+  "name": "Lunch and Learn",
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "start": "node bootstrap",
+    "test": "grunt test"
   },
   "dependencies": {
-    "express": "3.0.6",
-    "jade": "*"
+    "express": "~3.0.6",
+    "ejs": "~0.8.3"
   },
   "devDependencies": {
     "grunt-simple-mocha": "~0.3.2",
-    "grunt-contrib-less": "~0.3.2"
+    "grunt-contrib-less": "~0.3.2",
+    "webdriverjs": "~0.6.9",
+    "mocha": "~1.8.1",
+    "chai": "~1.4.2"
   }
 }
