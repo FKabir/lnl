@@ -31,7 +31,6 @@ module.exports = function(grunt) {
 
 	});
 	grunt.loadNpmTasks('grunt-simple-mocha');
-	grunt.loadNpmTasks('grunt-contrib-less');
 	grunt.registerTask('test', ['simplemocha']);
 	grunt.registerTask('development', 'less:development');
 }

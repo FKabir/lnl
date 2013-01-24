@@ -1,57 +1,44 @@
 module.exports = function() {
 	var chai = require('chai'),
-		should = chai.should(),
-		wd = require("webdriverjs")
-		client = wd.remote({
-			host: 'localhost',
-			port: '10000',
-			logLevel: 'verbose',
-			desiredCapabilities: {
-				browserName: 'phantomjs'
-			}
-		});
+        should = chai.should(),
+		wd = require("selenium-webdriverjs"),
+        client;
+
+    var expect = chai.expect;
+    var should = chai.should();
 
 	describe('Loading google...', function() {
+        before(function() {
+            client = new wd.Builder().
+                usingServer('http://localhost:10000').
+                withCapabilities({
+                    'browserName': 'phantomjs',
+                    'platform': 'ANY',
+                    'version': '',
+                    'javascriptEnabled': true
+                }).
+                build();
+        })
+
+        after(function() {
+            client.quit();
+        })
 
 		it('should fail', function(done) {
-      client
-        .init()
-        .url('http://google.com')
-        .getTitle(function(result) {
-          try {
-          	result.should.equal('Github');
-          	done();
-          } catch(e) {
-          	done(e);
-          }
+            client.get('http://github.com');
+            client.getTitle().then(function(title) {
+                title.should.equal('Google');
+                done();
+            });
         })
-        .end();
-    })
 
-    it('should pass', function(done) {
-      client
-        .init()
-        .url('http://google.com')
-        .getTitle(function(result) {
-           result.should.equal('Google');
-           done();
+        it('should pass', function(done) {
+            client.get('http://google.com')
+            client.getTitle().then(function(title) {
+                title.should.equal('Google');
+                done();
+            })
         })
-        .end()
-    })
-
 	});
-
-	describe('Loading google 2...', function() {
-		it('should pass', function(done) {
-			client.init()
-				.url("http://google.com")
-				.getTitle(function(result) {
-					result.should.equal("Google");
-					done();
-				})
-				.end();
-			
-		})
-	})
 }();
 
