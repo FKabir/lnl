@@ -15,6 +15,10 @@
     "grunt-simple-mocha": "~0.3.2",
     "mocha": "~1.8.1",
     "chai": "~1.4.2",
-    "selenium-webdriverjs": "~0.1.1-r18456"
+    "selenium-webdriverjs": "~0.1.1-r18456",
+    "grunt-contrib-less": "~0.5.0rc7",
+    "grunt-exec": "git://github.com/jharding/grunt-exec.git#grunt0.4rc",
+    "growl": "~1.7.0",
+    "grunt-contrib-watch": "~0.2.0rc7"
   }
 }
