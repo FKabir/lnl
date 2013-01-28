@@ -45,7 +45,7 @@ module.exports = function(grunt) {
                 cmd: "mocha --colors test" 
             },
             scriptTest: {
-                cmd: 'clear && echo watch js'
+                cmd: 'echo JS Watch, replace with minify?'
             }
         }
     });
@@ -53,5 +53,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.registerTask('test', ['exec:test']);
-    grunt.registerTask('development', 'less:development');
+    grunt.registerTask('build_development', 'less:development');
 }
