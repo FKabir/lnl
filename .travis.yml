@@ -7,3 +7,4 @@ branches:
       - develop
 before_script:
     - npm install -g grunt-cli
+    - phantomjs --webdriver=10000
