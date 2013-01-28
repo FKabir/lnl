@@ -1,14 +1,14 @@
 module.exports = function(grunt) {
-	'use strict';
+    'use strict';
 
-	//Project Configuration
-	grunt.initConfig({
+    //Project Configuration
+    grunt.initConfig({
 
-		less: {
-			development: {
-				options: {
-					paths: "less/include"
-				},
+        less: {
+            development: {
+                options: {
+                    paths: "less/include"
+                },
                 files: [
                     {
                         expand: true,
@@ -19,8 +19,8 @@ module.exports = function(grunt) {
                         ext: '.css'
                     }
                 ]
-			}
-		},
+            }
+        },
 
         watch: {
             less: {
@@ -48,10 +48,10 @@ module.exports = function(grunt) {
                 cmd: 'clear && echo watch js'
             }
         }
-	});
-	grunt.loadNpmTasks('grunt-exec');
+    });
+    grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.registerTask('test', ['exec:test']);
-	grunt.registerTask('development', 'less:development');
+    grunt.registerTask('test', ['exec:test']);
+    grunt.registerTask('development', 'less:development');
 }
