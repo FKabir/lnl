@@ -3,7 +3,74 @@ module.exports = function(grunt) {
 
     //Project Configuration
     grunt.initConfig({
-
+        watch: {
+            less: {
+                files: 'less/**/*.less',
+                tasks: ['less:development'],
+                options: {
+                    interrupt : true
+                }
+            },
+            frontend_js: {
+                files: ['public/js/*.js', '!public/js/vendor/*.js', '!public/js/templates.js'],
+                tasks: ['exec:test_frontend'], //add requirejs task
+                options: {
+                    interrupt: false
+                }
+            },
+            backend_js: {
+                files: ['**/*.js', '!templates/**/*.js', '!public/**/*.js', '!node_modules/**/*.js'],
+                tasks: ['exec:test_backend'],
+                options: {
+                    interrupt: false
+                }
+            },
+            templates: {
+                files: ['templates/**/*.html'],
+                tasks: ['jst:development'],
+                options: {
+                    interrupt: true
+                }
+            }
+        },
+        exec: {
+            test_all: {
+                cmd: "mocha --colors test" 
+            },
+            test_frontend: {
+                cmd: "mocha --colors --recursive test/frontend" 
+            },
+            test_backend: {
+                cmd: "mocha --colors --recursive test/backend"
+            }
+        },
+        jst: {
+            development: {
+                options: {
+                    amdWrapper: true,
+                    prettify: true,
+                    processContent: function(src) {
+                        return src.replace(/(^\s+|\s+$)/gm, '');
+                    }
+                },
+                files: {
+                    "public/js/templates.js": ["templates/**/*.html"]
+                }
+            },
+            production: {
+                options: {
+                    //amdWrapper: true,
+                    processContent: function(src) {
+                        console.log(src);
+                        console.log(src.replace(/(^\s+|\s+$)/gm, ''));
+                        return src.replace(/(^\s+|\s+$)/gm, '');
+                    }
+                },
+                files: {
+                    "/js/templates.js": ["templates/**/*.html"]
+                }
+            }
+        },
         less: {
             development: {
                 options: {
@@ -15,47 +82,21 @@ module.exports = function(grunt) {
                         //flatten: true, //will make dest folder flat
                         cwd: 'less/',
                         src: ['**/*.less', '!include/*.less'],
-                        dest: 'public/stylesheets/',
+                        dest: 'public/css/',
                         ext: '.css'
                     }
                 ]
             },
-
             production: {
                 
             }
-        },
-
-        watch: {
-            less: {
-                files: 'less/**/*.less',
-                tasks: ['less:development'],
-                options: {
-                    interrupt : true
-                }
-            },
-
-            scripts: {
-                files: ['**/*.js', '!node_modules/**/*.js'],
-                tasks: ['exec:scriptTest', 'exec:test'],
-                options: {
-                    interrupt: true
-                }
-            }
-        },
-
-        exec: {
-            test: {
-                cmd: "mocha --colors test" 
-            },
-            scriptTest: {
-                cmd: 'echo JS Watch, replace with minify?'
-            }
         }
+        
     });
     grunt.loadNpmTasks('grunt-exec');
+    grunt.loadNpmTasks('grunt-contrib-jst');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.registerTask('test', ['exec:test']);
+    grunt.registerTask('test', ['exec:test_all']);
     grunt.registerTask('build_development', 'less:development');
 }
