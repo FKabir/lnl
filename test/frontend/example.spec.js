@@ -1,4 +1,4 @@
-module.exports = function() {
+/*module.exports = function() {
 	var chai = require('chai'),
         should = chai.should(),
 		wd = require("selenium-webdriverjs"),
@@ -40,5 +40,4 @@ module.exports = function() {
             })
         })
 	});
-}();
-
+}();*/

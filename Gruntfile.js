@@ -19,6 +19,10 @@ module.exports = function(grunt) {
                         ext: '.css'
                     }
                 ]
+            },
+
+            production: {
+                
             }
         },
 
@@ -32,7 +36,7 @@ module.exports = function(grunt) {
             },
 
             scripts: {
-                files: ['**/*.js', '!node_modules/**/.js'],
+                files: ['**/*.js', '!node_modules/**/*.js'],
                 tasks: ['exec:scriptTest', 'exec:test'],
                 options: {
                     interrupt: true
