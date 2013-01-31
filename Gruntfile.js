@@ -12,14 +12,14 @@ module.exports = function(grunt) {
                 }
             },
             frontend_js: {
-                files: ['public/js/*.js', '!public/js/vendor/*.js', '!public/js/templates.js'],
+                files: ['public/js/*.js', 'test/frontend/**/*.js', '!public/js/vendor/*.js', '!public/js/templates.js'],
                 tasks: ['exec:test_frontend'], //add requirejs task
                 options: {
                     interrupt: false
                 }
             },
             backend_js: {
-                files: ['**/*.js', '!templates/**/*.js', '!public/**/*.js', '!node_modules/**/*.js'],
+                files: ['**/*.js', '!test/frontend/**/*.js', '!templates/**/*.js', '!public/**/*.js', '!node_modules/**/*.js'],
                 tasks: ['exec:test_backend'],
                 options: {
                     interrupt: false
@@ -35,10 +35,10 @@ module.exports = function(grunt) {
         },
         exec: {
             test_all: {
-                cmd: "mocha --colors test" 
+                cmd: "mocha --colors test"
             },
             test_frontend: {
-                cmd: "mocha --colors --recursive test/frontend" 
+                cmd: "mocha --colors --recursive test/frontend"
             },
             test_backend: {
                 cmd: "mocha --colors --recursive test/backend"
@@ -81,17 +81,17 @@ module.exports = function(grunt) {
                         expand: true,
                         //flatten: true, //will make dest folder flat
                         cwd: 'less/',
-                        src: ['**/*.less', '!include/*.less'],
+                        src: ['**/*.less', '!include/**/*.less'],
                         dest: 'public/css/',
                         ext: '.css'
                     }
                 ]
             },
             production: {
-                
+
             }
         }
-        
+
     });
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-contrib-jst');
