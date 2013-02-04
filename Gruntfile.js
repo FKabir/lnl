@@ -11,16 +11,16 @@ module.exports = function (grunt) {
                     interrupt : true
                 }
             },
-            frontendJs: {
-                files: ['public/js/**/*.js', '!public/js/vendor/*.js', '!public/js/templates.js'],
-                tasks: ['jshint:frontend', 'exec:testFrontend'], //add requirejs task
+            frontend_js: {
+                files: ['public/js/*.js', 'test/frontend/**/*.js', '!public/js/vendor/*.js', '!public/js/templates.js'],
+                tasks: ['exec:test_frontend'], //add requirejs task
                 options: {
                     interrupt: false
                 }
             },
-            backendJs: {
-                files: ['**/*.js', '!public/**/*.js', '!node_modules/**/*.js'],
-                tasks: ['jshint:backend', 'exec:testBackend'],
+            backend_js: {
+                files: ['**/*.js', '!test/frontend/**/*.js', '!templates/**/*.js', '!public/**/*.js', '!node_modules/**/*.js'],
+                tasks: ['exec:test_backend'],
                 options: {
                     interrupt: false
                 }
@@ -34,10 +34,10 @@ module.exports = function (grunt) {
             }
         },
         exec: {
-            testAll: {
+            test_all: {
                 cmd: "mocha --colors test"
             },
-            testFrontend: {
+            test_frontend: {
                 cmd: "mocha --colors --recursive test/frontend"
             },
             testBackend: {
@@ -90,7 +90,7 @@ module.exports = function (grunt) {
                         expand: true,
                         //flatten: true, //will make dest folder flat
                         cwd: 'less/',
-                        src: ['**/*.less', '!include/*.less'],
+                        src: ['**/*.less', '!include/**/*.less'],
                         dest: 'public/css/',
                         ext: '.css'
                     }
