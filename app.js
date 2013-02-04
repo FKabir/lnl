@@ -19,10 +19,9 @@ module.exports = (function() {
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
-  app.use(express.static(__dirname + '/public'));
   app.use(app.router);
+  app.use(express.static(__dirname + '/public'));
   app.use(express.errorHandler());
-  app.get('/help', routes.index);
 
   var start = function(readyCallback) {
     if (!this.server) {
