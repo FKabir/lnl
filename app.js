@@ -3,7 +3,9 @@
  * Therefore, the only thing that is exported when you require('./app')
  * will be what is returned
  */
-module.exports = function() {
+module.exports = (function() {
+  'use strict';
+
   /**
    * Module dependencies.
    */
@@ -25,19 +27,19 @@ module.exports = function() {
   var start = function(readyCallback) {
     if (!this.server) {
       this.server = app.listen(app.get('port'), function() {
-        if (readyCallback) readyCallback();
+        if (readyCallback) { readyCallback(); }
       });
     }
-  }
+  };
 
   var stop = function() {
     this.server.close();
     this.server = null;
-  }
+  };
 
   return {
     start: start,
     stop: stop
-  }
+  };
 
-}()
+}());

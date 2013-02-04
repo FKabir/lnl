@@ -8,4 +8,4 @@ branches:
 before_install:
     - phantomjs --webdriver=10000 &
 before_script:
-    - npm install -g grunt-cli    
+    - npm install -g grunt-cli

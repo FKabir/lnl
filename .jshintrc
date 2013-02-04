@@ -1,0 +1,19 @@
+{
+    "eqeqeq": true,
+    "node": true,
+    "es5": true,
+    "curly": true,
+    "camelcase": true,
+    "indent": 4,
+    "immed": true,
+    "latedef": true,
+    "newcap": true,
+    "noarg": true,
+    "noempty": true,
+    "regexp": true,
+    "undef": true,
+    "unused": true,
+    "strict": true,
+    "maxdepth": 4,
+    "white": false
+}

@@ -1,13 +1,12 @@
-/*module.exports = function() {
+module.exports = function () {
+    'use strict';
+
 	var chai = require('chai'),
         should = chai.should(),
 		wd = require("selenium-webdriverjs"),
         client;
 
-    var expect = chai.expect;
-    var should = chai.should();
-
-	describe('Loading google...', function() {
+	describe('Loading google...', function () {
         before(function() {
             client = new wd.Builder().
                 usingServer('http://localhost:10000').
@@ -24,7 +23,7 @@
             client.quit();
         })
 
-		it('should fail', function(done) {
+		it('should fail', function (done) {
             client.get('http://github.com');
             client.getTitle().then(function(title) {
                 title.should.equal('Google');
@@ -32,7 +31,7 @@
             });
         })
 
-        it('should pass', function(done) {
+        it('should pass', function (done) {
             client.get('http://google.com')
             client.getTitle().then(function(title) {
                 title.should.equal('Google');
@@ -40,4 +39,4 @@
             })
         })
 	});
-}();*/
+}();

@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     'use strict';
 
     //Project Configuration
@@ -11,16 +11,16 @@ module.exports = function(grunt) {
                     interrupt : true
                 }
             },
-            frontend_js: {
-                files: ['public/js/*.js', '!public/js/vendor/*.js', '!public/js/templates.js'],
-                tasks: ['exec:test_frontend'], //add requirejs task
+            frontendJs: {
+                files: ['public/js/**/*.js', '!public/js/vendor/*.js', '!public/js/templates.js'],
+                tasks: ['jshint:frontend', 'exec:testFrontend'], //add requirejs task
                 options: {
                     interrupt: false
                 }
             },
-            backend_js: {
-                files: ['**/*.js', '!templates/**/*.js', '!public/**/*.js', '!node_modules/**/*.js'],
-                tasks: ['exec:test_backend'],
+            backendJs: {
+                files: ['**/*.js', '!public/**/*.js', '!node_modules/**/*.js'],
+                tasks: ['jshint:backend', 'exec:testBackend'],
                 options: {
                     interrupt: false
                 }
@@ -34,14 +34,25 @@ module.exports = function(grunt) {
             }
         },
         exec: {
-            test_all: {
-                cmd: "mocha --colors test" 
+            testAll: {
+                cmd: "mocha --colors test"
             },
-            test_frontend: {
-                cmd: "mocha --colors --recursive test/frontend" 
+            testFrontend: {
+                cmd: "mocha --colors --recursive test/frontend"
             },
-            test_backend: {
+            testBackend: {
                 cmd: "mocha --colors --recursive test/backend"
+            }
+        },
+        jshint: {
+            options: {
+                jshintrc: '.jshintrc'
+            },
+            frontend: {
+                src: ['public/**/*.js', '!public/js/templates.js']
+            },
+            backend: {
+                src: ['**/*.js', '!node_modules/**/*.js', '!public/**/*.js', '!test/**/*.js']
             }
         },
         jst: {
@@ -59,15 +70,13 @@ module.exports = function(grunt) {
             },
             production: {
                 options: {
-                    //amdWrapper: true,
+                    amdWrapper: true,
                     processContent: function(src) {
-                        console.log(src);
-                        console.log(src.replace(/(^\s+|\s+$)/gm, ''));
                         return src.replace(/(^\s+|\s+$)/gm, '');
                     }
                 },
                 files: {
-                    "/js/templates.js": ["templates/**/*.html"]
+                    "public/js/templates.js": ["templates/**/*.html"]
                 }
             }
         },
@@ -88,15 +97,16 @@ module.exports = function(grunt) {
                 ]
             },
             production: {
-                
+
             }
         }
-        
+
     });
     grunt.loadNpmTasks('grunt-exec');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-jst');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.registerTask('test', ['exec:test_all']);
     grunt.registerTask('build_development', 'less:development');
-}
+};
