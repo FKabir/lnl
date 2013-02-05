@@ -3,25 +3,25 @@ define([
     'app',
 
     // Views
-    'modules/foo/views'
+    'modules/github/views'
 ],
 
 function(app, Views) {
     //Create a new module.
-    var Foo = app.module();
+    var Github = app.module();
 
     //Default Model.
-    Foo.Model = Backbone.Model.extend({
+    Github.Model = Backbone.Model.extend({
 
     });
 
     //Default Collection.
-    Foo.Collection = Backbone.Collection.extend({
-        model: Foo.Model
+    Github.Collection = Backbone.Collection.extend({
+        model: Github.Model
     });
 
-    Foo.Views = Views;
+    Github.Views = Views;
 
     //Return the module for AMD compliance.
-    return Foo;
+    return Github;
 });

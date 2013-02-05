@@ -20,7 +20,7 @@ module.exports = function (grunt) {
             },
             backend_js: {
                 files: ['**/*.js', '!test/frontend/**/*.js', '!templates/**/*.js', '!public/**/*.js', '!node_modules/**/*.js'],
-                tasks: ['exec:test_backend'],
+                tasks: ['exec:testBackend'],
                 options: {
                     interrupt: false
                 }
@@ -58,8 +58,12 @@ module.exports = function (grunt) {
         jst: {
             development: {
                 options: {
-                    amdWrapper: true,
                     prettify: true,
+                    processName: function(filename) {
+                        filename = filename.slice(filename.indexOf('/') + 1);
+                        return filename.slice(0, filename.indexOf('.'));
+
+                    },
                     processContent: function(src) {
                         return src.replace(/(^\s+|\s+$)/gm, '');
                     }

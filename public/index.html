@@ -7,11 +7,21 @@
         <title>Login persistance.</title>
 
         <!--Application Styles-->
+        <link rel="stylesheet" href="/css/bootstrap.css">
+        <link rel="stylesheet" href="/css/inbetweener.css">
+        <link rel="stylesheet" href="/css/responsive.css">
         <link rel="stylesheet" href="/css/style.css">
 	</head>
 	<body>
+        <header class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="brand" href="/">Lunch and Learn</a>
+                </div>
+            </div>
+        </header>
         <!-- Main container -->
-        <div role="main" id="main"></div>
+        <div role="main" id="main" class="container-fluid"></div>
 
         <!-- App source -->
         <script data-main="/app/config" src="/js/vendor/require.js"></script>
