@@ -6,7 +6,7 @@ define([
     'modules/github'
 ],
 
-function(app, Foo) {
+function(app, Github) {
     // Defining the application router, you can attach sub roubers here
     var Router = Backbone.Router.extend({
         routes: {
@@ -15,7 +15,7 @@ function(app, Foo) {
         },
 
         index: function() {
-            var collection = new Foo.Collection();
+            //var collection = new Github.Collection();
             //collection.fetch();
             //Use and configure a 'main' layout
             app.useLayout('main');
