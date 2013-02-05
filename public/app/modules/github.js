@@ -12,13 +12,13 @@ function(app, Views) {
 
     //Default Model.
     Github.Model = Backbone.Model.extend({
-
+        repos: []
     });
 
     //Default Collection.
-    Github.Collection = Backbone.Collection.extend({
+    /*Github.Collection = Backbone.Collection.extend({
         model: Github.Model
-    });
+    });*/
 
     Github.Views = Views;
 

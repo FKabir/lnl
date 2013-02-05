@@ -35,10 +35,12 @@ module.exports = function(app) {
     }, function(req, accessToken, refreshToken, profile, done) {
         if (!req.user) {
             //Not logged in, Auth using Github
+            console.log(profile);
             return done(null, profile);
         } else {
             //logged in Associate Github account with user, perserve
             //login state by supplying existing user with the association
+            console.log(req.user);
             return done(null, req.user);
         }
     }));
