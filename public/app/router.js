@@ -3,30 +3,29 @@ define([
     'app',
 
     //Modules
-    'modules/foo'
+    'modules/github'
 ],
 
-function(app, Foo) {
+function(app, Github) {
     // Defining the application router, you can attach sub roubers here
     var Router = Backbone.Router.extend({
         routes: {
-            '': 'index'
+            '': 'index',
+            'show': 'index2'
         },
 
         index: function() {
-            var collection = new Foo.Collection();
+            //var collection = new Github.Collection();
             //collection.fetch();
             //Use and configure a 'main' layout
-            app.useLayout('main').setViews({
-                //Attach the bar View into the content view..
-                '.bar': new Foo.Views.Bar({
-                    collection: collection
-                }),
-                '.secondView': new Foo.Views.SecondView({
+            app.useLayout('main');
 
-                })
-            }).render();
 
+        },
+
+        index2: function() {
+            console.log('router hit');
+            app.useLayout('main2');
         }
     })
 

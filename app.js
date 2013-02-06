@@ -7,21 +7,31 @@ module.exports = (function() {
   'use strict';
 
   /**
-   * Module dependencies.
+   * Module dependencieas.
    */
 
   var express = require('express'),
       routes = require('./routes'),
+      passport = require('passport'),
       app = express();
 
+  /**
+   * Setting up middleware stack before expressing any routes,
+   * as express automatically adds app.router to the stack the first time
+   * it hits a route, if it is not already part of the stack
+   */
   app.set('port', process.env.PORT || 3000);
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
-  app.use(app.router);
   app.use(express.static(__dirname + '/public'));
+  app.use(passport.initialize());
+  app.use(app.router);
   app.use(express.errorHandler());
+
+  var login = require('./login')(app);
+
 
   var start = function(readyCallback) {
     if (!this.server) {

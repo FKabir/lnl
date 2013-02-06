@@ -12,6 +12,7 @@ require.config({
         jquery: '../js/vendor/jquery',
         lodash: '../js/vendor/lodash',
         backbone: '../js/vendor/backbone',
+        bootstrap: '../js/vendor/bootstrap',
         JST: '../js/templates'
     },
 
@@ -23,8 +24,14 @@ require.config({
             deps: ['lodash', 'jquery'],
             exports: 'Backbone'
         },
+        bootstrap: {
+            deps: ['jquery']
+        },
 
-        //Backbone.LayoutManager depends on Backbone
-        'plugins/backbone.layoutmanager': ['backbone']
+        JST: {
+            exports: 'JST'
+        }
+
+
     }
 });
