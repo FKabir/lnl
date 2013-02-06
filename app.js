@@ -10,10 +10,18 @@ module.exports = (function() {
    * Module dependencieas.
    */
 
-  var express = require('express'),
+  var config = require('./config'),
+      express = require('express'),
       routes = require('./routes'),
+      RedisStore = require('connect-redis')(express),
       passport = require('passport'),
       app = express();
+
+
+    app.set('view engine', 'ejs');
+    app.set('view options', {
+        layout: false
+    })
 
   /**
    * Setting up middleware stack before expressing any routes,
@@ -25,13 +33,27 @@ module.exports = (function() {
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(express.cookieParser());
+  app.use(express.session({
+    store: new RedisStore({
+        host: 'localhost',
+        port: 6379
+    }),
+    cookie: {
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        path: '/'
+    },
+    secret: config.session.secret
+  }))
   app.use(express.static(__dirname + '/public'));
   app.use(passport.initialize());
+  app.use(passport.session());
   app.use(app.router);
   app.use(express.errorHandler());
 
   var login = require('./login')(app);
-
+  app.get('/user', routes.index);
 
   var start = function(readyCallback) {
     if (!this.server) {

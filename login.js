@@ -9,12 +9,9 @@ module.exports = function(app) {
         GithubStrategy = require('passport-github').Strategy;
 
     // Passport session setup.
-    //   To support persistent login sessions, Passport needs to be able to
-    //   serialize users into and deserialize users out of the session.  Typically,
-    //   this will be as simple as storing the user ID when serializing, and finding
-    //   the user by ID when deserializing.  However, since this example does not
-    //   have a database of user records, the complete GitHub profile is serialized
-    //   and deserialized.
+    //Throw in the entire user object into session, cause we are using redis to store
+    //our data, so it makes no sense to just store the id, then use that id to go
+    //the user data.. from inside redis. Just gonna put it all together.
     passport.serializeUser(function(user, done) {
       done(null, user);
     });
@@ -35,12 +32,10 @@ module.exports = function(app) {
     }, function(req, accessToken, refreshToken, profile, done) {
         if (!req.user) {
             //Not logged in, Auth using Github
-            console.log(profile);
             return done(null, profile);
         } else {
             //logged in Associate Github account with user, perserve
             //login state by supplying existing user with the association
-            console.log(req.user);
             return done(null, req.user);
         }
     }));
