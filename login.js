@@ -6,7 +6,10 @@ module.exports = function(app) {
      */
     var config = require('./config'),
         passport = require('passport'),
-        GithubStrategy = require('passport-github').Strategy;
+        GithubStrategy = require('passport-github').Strategy,
+        GithubClient = require('github-client');
+
+
 
     // Passport session setup.
     //Throw in the entire user object into session, cause we are using redis to store
@@ -30,6 +33,7 @@ module.exports = function(app) {
         callbackURL: 'http://localhost:3000/auth/github/callback',
         passReqToCallback: true
     }, function(req, accessToken, refreshToken, profile, done) {
+        req.session.accessToken = accessToken;
         if (!req.user) {
             //Not logged in, Auth using Github
             return done(null, profile);

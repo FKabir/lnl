@@ -18,7 +18,8 @@ module.exports = (function() {
                 }
                 'github': {
                     'clientId': '',
-                    'clientSecret': ''
+                    'clientSecret': '',
+                    'hubbub': 'http://localhost:3000/hubbub/'
                 }
             }
             break;

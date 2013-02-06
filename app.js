@@ -54,6 +54,9 @@ module.exports = (function() {
 
   var login = require('./login')(app);
   app.get('/user', routes.index);
+  app.get('/hubbub/:repo/:event', routes.setupHubbub);
+  app.del('/hubbub/:repo/:event', routes.teardownHubbub);
+  app.post('/hubbub/push', routes.handlePush);
 
   var start = function(readyCallback) {
     if (!this.server) {
