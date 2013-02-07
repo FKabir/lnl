@@ -6,6 +6,10 @@
     "start": "node bootstrap",
     "test": "grunt test"
   },
+  "engines": {
+    "node": "0.8.x",
+    "npm": "1.1.x"
+  }
   "dependencies": {
     "express": "~3.0.6",
     "ejs": "~0.8.3",
