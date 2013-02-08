@@ -44,22 +44,20 @@ exports.setupHubbub = function(req, res) {
         accessToken: req.session.accessToken
     });
 
-    console.log(req.user);
-
     var params = {
         owner: req.user.username,
         repo: req.params.repo,
-        event: req.params.event,
-        callbackURI: config.github.hubbub + req.params.event
+        events: req.params.events,
+        callbackURI: config.github.hookHandler
     };
 
     ghc.getDatHubbubOn(params, function(err, response) {
-         res.send(response);
+        res.send(response);
     })
 }
 
 exports.teardownHubbub = function(req, res) {
-    var ghc = gh({
+    /*var ghc = gh({
         accessToken: req.session.accessToken
     });
 
@@ -72,9 +70,37 @@ exports.teardownHubbub = function(req, res) {
 
     ghc.getDatHubbubOff(params, function(err, response) {
         res.send(response);
-    })
+    })*/
 }
 
-exports.handlePush = function(req, res) {
-    console.log(req.body);
+exports.handleHook = function(req, res) {
+    var fs = require('fs');
+    var githubResponse = fs.readFileSync('test.json', 'utf8');
+    var header = {"X-Github-Event": "push"};
+
+    switch (header["X-Github-Event"]) {
+        case "push":
+            var hours = 0;
+
+            githubResponse = JSON.parse(githubResponse);
+
+            _(githubResponse).each( function( value, key, githubResponse ) {
+
+            })
+
+            if (githubResponse.ref.indexOf('refs/heads') != -1) {
+                console.log(githubResponse.ref.slice(11));
+
+                res.send(githubResponse.ref);
+            }
+
+            break;
+        default:
+            res.send('Default')
+            break;
+    }
+}
+
+function parseBranch(refs) {
+
 }

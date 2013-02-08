@@ -19,7 +19,7 @@ module.exports = (function() {
                 'github': {
                     'clientId': '',
                     'clientSecret': '',
-                    'hubbub': 'http://localhost:3000/hubbub/'
+                    'hookHandler': 'http://localhost:3000/hubbub/'
                 }
             }
             break;

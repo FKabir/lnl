@@ -1,0 +1,81 @@
+{
+  "pusher": {
+    "name": "jamie-stackhouse",
+    "email": "contin673@gmail.com"
+  },
+  "repository": {
+    "name": "lnl",
+    "has_wiki": true,
+    "size": 3384,
+    "created_at": "2013-01-21T16:58:50-08:00",
+    "private": false,
+    "watchers": 0,
+    "fork": false,
+    "url": "https://github.com/jamie-stackhouse/lnl",
+    "id": 7743534,
+    "pushed_at": "2013-02-08T10:28:59-08:00",
+    "has_downloads": true,
+    "open_issues": 0,
+    "has_issues": true,
+    "stargazers": 0,
+    "forks": 0,
+    "description": "Lunch And Learn Sample Application",
+    "owner": {
+      "name": "jamie-stackhouse",
+      "email": "contin673@gmail.com"
+    }
+  },
+  "forced": false,
+  "after": "d6ed19b914a14d04b02acf04edbb6a0126ce49e5",
+  "head_commit": {
+    "modified": [
+      "package.json"
+    ],
+    "added": [],
+    "author": {
+      "name": "Jamie Stackhouse",
+      "username": "jamie-stackhouse",
+      "email": "jamie.stackhouse@teamspace.ca"
+    },
+    "removed": [],
+    "timestamp": "2013-02-08T10:28:29-08:00",
+    "url": "https://github.com/jamie-stackhouse/lnl/commit/d6ed19b914a14d04b02acf04edbb6a0126ce49e5",
+    "id": "d6ed19b914a14d04b02acf04edbb6a0126ce49e5",
+    "distinct": true,
+    "message": "Adding github-client to seperate repo",
+    "committer": {
+      "name": "Jamie Stackhouse",
+      "username": "jamie-stackhouse",
+      "email": "jamie.stackhouse@teamspace.ca"
+    }
+  },
+  "deleted": false,
+  "ref": "refs/heads/feature/user-login",
+  "commits": [
+    {
+      "modified": [
+        "package.json"
+      ],
+      "added": [],
+      "author": {
+        "name": "Jamie Stackhouse",
+        "username": "jamie-stackhouse",
+        "email": "jamie.stackhouse@teamspace.ca"
+      },
+      "removed": [],
+      "timestamp": "2013-02-08T10:28:29-08:00",
+      "url": "https://github.com/jamie-stackhouse/lnl/commit/d6ed19b914a14d04b02acf04edbb6a0126ce49e5",
+      "id": "d6ed19b914a14d04b02acf04edbb6a0126ce49e5",
+      "distinct": true,
+      "message": "Adding github-client to seperate repo",
+      "committer": {
+        "name": "Jamie Stackhouse",
+        "username": "jamie-stackhouse",
+        "email": "jamie.stackhouse@teamspace.ca"
+      }
+    }
+  ],
+  "before": "ee490754c93ab5f1dc4f7ce8c54ff625340488b0",
+  "compare": "https://github.com/jamie-stackhouse/lnl/compare/ee490754c93a...d6ed19b914a1",
+  "created": false
+}

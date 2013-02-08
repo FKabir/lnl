@@ -5,10 +5,7 @@ branches:
     only:
       - master
       - develop
-<<<<<<< HEAD
 before_install:
     - phantomjs --webdriver=10000 &
-=======
->>>>>>> origin
 before_script:
     - npm install -g grunt-cli
