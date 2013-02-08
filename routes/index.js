@@ -44,6 +44,8 @@ exports.setupHubbub = function(req, res) {
         accessToken: req.session.accessToken
     });
 
+    console.log(req.user);
+
     var params = {
         owner: req.user.username,
         repo: req.params.repo,

@@ -31,6 +31,9 @@ module.exports = function(app) {
         clientID: config.github.clientId,
         clientSecret: config.github.clientSecret,
         callbackURL: 'http://localhost:3000/auth/github/callback',
+        scope: [
+            'repo'
+        ],
         passReqToCallback: true
     }, function(req, accessToken, refreshToken, profile, done) {
         req.session.accessToken = accessToken;

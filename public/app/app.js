@@ -21,7 +21,6 @@ function($, _, Backbone, JST) {
         } else {
             return "<div data-subview='" + subviewName + "'></div>";
         }
-
     }
 
     //Provide a global location to place application configuration settings and module creation.
