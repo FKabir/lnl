@@ -84,7 +84,7 @@ exports.handleHook = function(req, res) {
 
             githubResponse = JSON.parse(githubResponse);
 
-            _(githubResponse).each( function( value, key, githubResponse ) {
+            _(githubResponse.commits).each( function( value, key, githubResponse ) {
 
             })
 

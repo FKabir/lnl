@@ -16,7 +16,8 @@
     "passport": "~0.1.15",
     "passport-github": "~0.1.3",
     "connect-redis": "~1.4.5",
-    "github-client": "git://github.com/jamie-stackhouse/github-client.git"
+    "github-client": "git://github.com/jamie-stackhouse/github-client.git",
+    "attask-client": "git://github.com/jamie-stackhouse/attask-client.git"
   },
   "devDependencies": {
     "mocha": "~1.8.1",
