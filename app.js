@@ -34,7 +34,9 @@ module.exports = (function() {
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
+  app.use(express.static(__dirname + '/public'));
   app.use(express.session({
+    key: 'sid',
     store: new RedisStore({
         host: 'localhost',
         port: 6379
@@ -46,13 +48,15 @@ module.exports = (function() {
     },
     secret: config.session.secret
   }))
-  app.use(express.static(__dirname + '/public'));
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(app.router);
   app.use(express.errorHandler());
 
   var login = require('./login')(app);
+
+  app.get('/', routes.index)
+  app.get('/api/github/projects', routes.api.getProjects)
   app.get('/user', routes.index);
   app.get('/hook/:repo/:event', routes.setupHubbub);
   //app.get('/hook/del/:repo/:event', routes.teardownHubbub);

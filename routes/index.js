@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash'),
+    api = require('./api'),
     config = require('../config'),
     redis = require('redis'),
     client = redis.createClient(),
@@ -10,33 +11,10 @@ client.on('error', function(err) {
     console.log("Redis Error: " + err);
 })
 
+exports.api = api;
 
-/*
- * GET home page.
- */
 exports.index = function(req, res){
-  console.log(req.session);
-
-  var ghc = gh({
-    accessToken: req.session.accessToken
-  })
-
-  ghc.getRepos(function(error, response) {
-    //console.log(response);
-    if (error) throw Error(error);
-    client.set('repos:' + req.user.username,
-        JSON.stringify(response),
-        function(err, resp) {
-            if (err) {
-                res.send('Error: ' + err, 400);
-                throw Error(err);
-            } else {
-                res.send('Ok', 200);
-            }
-
-        }
-    );
-  });
+    res.render('index');
 };
 
 exports.setupHubbub = function(req, res) {
@@ -85,7 +63,9 @@ exports.handleHook = function(req, res) {
             githubResponse = JSON.parse(githubResponse);
 
             _(githubResponse).each( function( value, key, githubResponse ) {
+                if (value.message) {
 
+                }
             })
 
             if (githubResponse.ref.indexOf('refs/heads') != -1) {
