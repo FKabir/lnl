@@ -22,7 +22,6 @@ function($, _, Backbone, JST) {
             return "<div data-subview='" + subviewName + "'></div>";
         }
     }
-
     //Provide a global location to place application configuration settings and module creation.
     var app = {
         //The root path for the app
@@ -34,6 +33,17 @@ function($, _, Backbone, JST) {
             return _.extend({
                 Views: {}
             }, additionalProperties);
+        },
+
+        setView: function(view, selector) {
+            this.layout.renderView(view, '[data-subview=' + selector + ']');
+        },
+
+        setViews: function(views) {
+            var self = this;
+            _.each(views, function(view, selector) {
+                self.setView(view, selector);
+            });
         },
 
         //Helper for using layouts (parent views)
@@ -54,6 +64,18 @@ function($, _, Backbone, JST) {
                 template: JST['layouts/' + name],
                 className: 'layout ' + name,
                 id: 'layout',
+                initialize: function() {
+                    this.childViews = {};
+                },
+                renderView: function(view, selector) {
+                    if (!this.childViews[selector]) {
+                        this.childViews[selector] = view;
+                        view.setElement(selector).render();
+                        this.$el.find(selector).removeClass('loading');
+                    } else {
+                        this.childViews[selector].render();
+                    }
+                },
                 render: function() {
                     this.$el.html(this.template);
                 }
@@ -67,8 +89,9 @@ function($, _, Backbone, JST) {
             layout.render();
             //Cache the reference
             this.layout = layout;
+            this.layout.views = [];
             //Return the reference, so we can chain this call.
-            return layout;
+            return this;
         }
     }, Backbone.Events);
 })

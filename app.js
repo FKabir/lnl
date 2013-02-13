@@ -48,15 +48,19 @@ module.exports = (function() {
     },
     secret: config.session.secret
   }))
+  app.use(express.errorHandler());
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(app.router);
-  app.use(express.errorHandler());
+
 
   var login = require('./login')(app);
 
   app.get('/', routes.index)
-  app.get('/api/github/projects', routes.api.getProjects)
+  app.get('/api/attask/projects', routes.api.attask.getProjects);
+  app.get('/api/attask/projects/resync', routes.api.attask.refreshProjects);
+  app.get('/api/github/projects', routes.api.github.getProjects);
+  app.get('/api/github/projects/resync', routes.api.github.refreshProjects);
   app.get('/user', routes.index);
   app.get('/hook/:repo/:event', routes.setupHubbub);
   //app.get('/hook/del/:repo/:event', routes.teardownHubbub);

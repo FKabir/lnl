@@ -1,0 +1,29 @@
+<header>
+    <h2>Github Repositories</h2>
+    <button class="btn icon-refresh"> Resync</button>
+</header>
+<ul class="unstyled">
+    <% for (var i = 0; i < repos.length; i++) { %>
+        <% var repo = repos[i]; %>
+        <li class="well">
+            <div class="avatar">
+                <%= '<img src="' + repo.owner.avatar_url + '" alt="' + repo.owner.login + '"/>' %>
+            </div>
+            <div class="info">
+                <h3>
+                    <i class="icon-folder-open"></i>
+                    <a href="/show">
+                        <%= repo.full_name.slice(repo.full_name.indexOf('/') + 1) %>
+                    </a>
+                </h3>
+                <div class="stat">
+                    <%=
+                        (repo.lastRan)
+                            ? ('Last hook run:' + repo.lastRan)
+                            : ('Last hook run: <em>Never</em>')
+                    %>
+                </div>
+            </div>
+        </li>
+    <% } %>
+</ul>

@@ -3,10 +3,13 @@ define([
     'app',
 
     //Modules
-    'modules/github'
+    'modules/github',
+    'modules/attask'
 ],
 
-function(app, Github) {
+function(app, Github, Attask) {
+    var GithubRepos = new Github.Collection();
+
     // Defining the application router, you can attach sub roubers here
     var Router = Backbone.Router.extend({
         routes: {
@@ -15,12 +18,15 @@ function(app, Github) {
         },
 
         index: function() {
-            //var collection = new Github.Collection();
-            //collection.fetch();
             //Use and configure a 'main' layout
-            app.useLayout('main');
-
-
+            app.useLayout('main').setViews({
+                "github": new Github.Views.RepoList({
+                    collection: GithubRepos
+                }),
+                "attask": new Attask.Views.ProjectList({
+                    collection: GithubRepos
+                })
+            });
         },
 
         index2: function() {
@@ -29,7 +35,7 @@ function(app, Github) {
         }
     })
 
-
+    GithubRepos.fetch();
 
     return Router;
 })

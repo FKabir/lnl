@@ -18,7 +18,8 @@
     "connect-redis": "~1.4.5",
     "attask-client": "git://github.com/jamie-stackhouse/attask-client.git",
     "github-client": "git://github.com/jamie-stackhouse/github-client.git",
-    "redis": "~0.7.2"
+    "redis": "~0.7.2",
+    "async": "~0.2.5"
   },
   "devDependencies": {
     "mocha": "~1.8.1",

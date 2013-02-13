@@ -1,8 +1,47 @@
 @import "variables.less";
 @import "mixins.less";
 
+* {
+    box-sizing: border-box;
+}
+
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+.github {
+
+    .info {
+        display: inline-block;
+
+        width: 100%;
+        padding-left: 70px;
+        margin-left: -60px; //width of avatar
+        vertical-align: top;
+
+        h3 {
+
+            margin: 0;
+
+            a {
+                color: #4183c4;
+            }
+        }
+    }
+
+    .avatar {
+
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+
+        img {
+            border-radius: 30px;
+            border: 2px solid #aaa;
+        }
+
+    }
+
 }
 
 .loading {
@@ -10,6 +49,8 @@ body {
     text-align: center;
     min-height: 300px;
 }
+
+
 
 a {
   color: #00B7FF;
