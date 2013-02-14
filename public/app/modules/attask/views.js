@@ -15,9 +15,9 @@ function(app, Backbone) {
         className: "bookContainer"
     })
 
-    Views.RepoList = Backbone.View.extend({
+    Views.ProjectList = Backbone.View.extend({
         template: JST["repos"],
-        className: "repos",
+        className: "projects",
 
         initialize: function(options) {
             this.collection = options.collection;
@@ -25,17 +25,10 @@ function(app, Backbone) {
             this.collection.on('reset', this.render, this);
         },
 
-        events : {
-            "click .icon-refresh": "resyncGithub"
-        },
-
-        resyncGithub: function() {
-            this.collection.fetch({url: '/api/github/projects/resync'});
-        },
-
         render: function() {
-            this.$el.html(this.template({repos: this.collection.toJSON()}));
-            return this;
+            if (this.collection.length) {
+                this.$el.html(this.template({repos: this.collection.toJSON()}));
+            }
         }
     })
 

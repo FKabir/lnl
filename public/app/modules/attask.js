@@ -3,26 +3,26 @@ define([
     'app',
 
     // Views
-    'modules/github/views'
+    'modules/attask/views'
 ],
 
 function(app, Views) {
     //Create a new module.
-    var GithubList = app.module();
+    var AttaskList = app.module();
 
     //Default Model.
-    GithubList.Model = Backbone.Model.extend({
+    AttaskList.Model = Backbone.Model.extend({
 
     });
 
     //Default Collection.
-    GithubList.Collection = Backbone.Collection.extend({
-        model: GithubList.Model,
+    AttaskList.Collection = Backbone.Collection.extend({
+        model: AttaskList.Model,
         url: '/api/github/projects'
     });
 
-    GithubList.Views = Views;
+    AttaskList.Views = Views;
 
     //Return the module for AMD compliance.
-    return GithubList;
+    return AttaskList;
 });
