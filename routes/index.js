@@ -26,7 +26,7 @@ exports.setupHubbub = function(req, res) {
         owner: req.user.username,
         repo: req.params.repo,
         events: req.params.events,
-        callbackURI: config.github.hookHandler
+        callbackURI: config.github.hookHandler  
     };
 
     ghc.getDatHubbubOn(params, function(err, response) {
