@@ -9,6 +9,7 @@ define([
 
 function(app, Github, Attask) {
     var GithubRepos = new Github.Collection();
+    var AttaskProjects = new Attask.Collection();
 
     // Defining the application router, you can attach sub roubers here
     var Router = Backbone.Router.extend({
@@ -24,18 +25,30 @@ function(app, Github, Attask) {
                     collection: GithubRepos
                 }),
                 "attask": new Attask.Views.ProjectList({
-                    collection: GithubRepos
+                    collection: AttaskProjects
                 })
             });
         },
 
         index2: function() {
-            console.log('router hit');
             app.useLayout('main2');
         }
     })
 
-    GithubRepos.fetch();
+    GithubRepos.fetch({
+        error: function(collection, jqXHR) {
+            if (jqXHR.status == 404) {
+                GithubRepos.trigger('fail:login_required', jqXHR.status);
+            }
+        }
+    });
+    AttaskProjects.fetch({
+        error: function(collection, jqXHR) {
+            if (jqXHR.status == 401) {
+                AttaskProjects.trigger('fail:login_required', jqXHR.status);
+            }
+        }
+    });
 
     return Router;
 })

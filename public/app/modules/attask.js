@@ -18,7 +18,7 @@ function(app, Views) {
     //Default Collection.
     AttaskList.Collection = Backbone.Collection.extend({
         model: AttaskList.Model,
-        url: '/api/github/projects'
+        url: '/api/attask/projects'
     });
 
     AttaskList.Views = Views;

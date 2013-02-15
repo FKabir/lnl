@@ -1,0 +1,19 @@
+<header>
+    <h2>AtTask Projects</h2>
+    <button class="btn icon-refresh float-right"> Resync</button>
+</header>
+<ul class="unstyled">
+  <% for (var i = 0; i < projects.length; i++) { %>
+    <% var project = projects[i]; %>
+    <li class="well">
+      <div class="info">
+        <h3>
+          <i class="icon-briefcase"></i>
+          <a href="/show">
+            <%= project.name %>
+          </a>
+        </h3>
+      </div>
+    </li>
+  <% } %>
+</ul>

@@ -90,45 +90,60 @@ function refreshRepos(req, res, done) {
     })
 }
 
+function isAuthenticated(req) {
+    if (req.user.id) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 module.exports = (function() {
 
     function refreshProjects(req, res) {
-        refreshRepos(req, res, function(err, repos) {
-            if (err) {
-                res.send(err, 400);
-            } else {
-                res.send(repos, 200);
-            }
-        });
+        if (req.isAuthenticated()) {
+            refreshRepos(req, res, function(err, repos) {
+                if (err) {
+                    res.send(err, 400);
+                } else {
+                    res.send(repos, 200);
+                }
+            });
+        } else {
+            res.send(404);
+        }
     }
 
     function getProjects(req, res) {
-        getUserRepoIds(req.user.id, function(err, repoIds) {
-            var repos = [];
+        if (req.isAuthenticated()) {
+            getUserRepoIds(req.user.id, function(err, repoIds) {
+                var repos = [];
 
-            async.each(repoIds,
-                function(repoId, done) {
-                    client.hgetall('users:' + req.user.id + ':repos:' + repoId, function(err, reply) {
+                async.each(repoIds,
+                    function(repoId, done) {
+                        client.hgetall('users:' + req.user.id + ':repos:' + repoId, function(err, reply) {
+                            if (err) {
+                                done(err);
+                            } else {
+                                reply.owner = JSON.parse(reply.owner);
+                                reply.permissions = JSON.parse(reply.permissions);
+                                repos.push(reply);
+                                done(null);
+                            }
+                        })
+                    },
+                    function(err) {
                         if (err) {
-                            done(err);
+                            res.send(err, 400);
                         } else {
-                            reply.owner = JSON.parse(reply.owner);
-                            reply.permissions = JSON.parse(reply.permissions);
-                            repos.push(reply);
-                            done(null);
+                            res.send(repos, 200);
                         }
-                    })
-                },
-                function(err) {
-                    if (err) {
-                        res.send(err, 400);
-                    } else {
-                        res.send(repos, 200);
                     }
-                }
-            );
-        });
+                );
+            });
+        } else {
+            res.send(404);
+        }
     }
 
     return {

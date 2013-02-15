@@ -10,18 +10,17 @@ module.exports = (function() {
    * Module dependencieas.
    */
 
-  var config = require('./config'),
-      express = require('express'),
-      routes = require('./routes'),
-      RedisStore = require('connect-redis')(express),
-      passport = require('passport'),
-      app = express();
+  var config = require('./config');
+  var express = require('express');
+  var routes = require('./routes');
+  var RedisStore = require('connect-redis')(express);
+  var passport = require('passport');
+  var app = express();
 
-
-    app.set('view engine', 'ejs');
-    app.set('view options', {
-        layout: false
-    })
+  app.set('view engine', 'ejs');
+  app.set('view options', {
+    layout: false
+  })
 
   /**
    * Setting up middleware stack before expressing any routes,
@@ -29,6 +28,7 @@ module.exports = (function() {
    * it hits a route, if it is not already part of the stack
    */
   app.set('port', process.env.PORT || 3000);
+  app.set('json spaces', 0);
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
@@ -38,13 +38,13 @@ module.exports = (function() {
   app.use(express.session({
     key: 'sid',
     store: new RedisStore({
-        host: 'localhost',
-        port: 6379
+      host: 'localhost',
+      port: 6379
     }),
     cookie: {
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-        path: '/'
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      path: '/'
     },
     secret: config.session.secret
   }))
@@ -53,10 +53,14 @@ module.exports = (function() {
   app.use(passport.session());
   app.use(app.router);
 
+  /**
+   * Routes
+   */
 
   var login = require('./login')(app);
 
   app.get('/', routes.index)
+  app.post('/api/attask/session', routes.api.attask.login)
   app.get('/api/attask/projects', routes.api.attask.getProjects);
   app.get('/api/attask/projects/resync', routes.api.attask.refreshProjects);
   app.get('/api/github/projects', routes.api.github.getProjects);

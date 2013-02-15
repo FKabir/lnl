@@ -1,43 +1,40 @@
 define([
-    'app',
+  'app',
 
-    //Libs
-    'backbone'
+  //Libs
+  'backbone'
 ],
 
 function(app, Backbone) {
 
-    var Views = {};
+  var Views = {};
 
-    Views.Bar = Backbone.View.extend({
-        template: JST["foo/bar"],
-        tagName: "div",
-        className: "bookContainer"
-    })
+  Views.RepoList = Backbone.View.extend({
+    template: JST["repos"],
+    className: "repos",
 
-    Views.RepoList = Backbone.View.extend({
-        template: JST["repos"],
-        className: "repos",
+    initialize: function(options) {
+      this.collection = options.collection;
 
-        initialize: function(options) {
-            this.collection = options.collection;
+      this.collection.on('reset', this.render, this);
+      this.collection.on('fail:login_required', function(response) {
+        this.$el.html(JST["github-login"]());
+      }, this);
+    },
 
-            this.collection.on('reset', this.render, this);
-        },
+    events : {
+      "click .icon-refresh": "resyncGithub"
+    },
 
-        events : {
-            "click .icon-refresh": "resyncGithub"
-        },
+    resyncGithub: function() {
+      this.collection.fetch({url: '/api/github/projects/resync'});
+    },
 
-        resyncGithub: function() {
-            this.collection.fetch({url: '/api/github/projects/resync'});
-        },
+    render: function() {
+      this.$el.html(this.template({repos: this.collection.toJSON()}));
+      return this;
+    }
+  })
 
-        render: function() {
-            this.$el.html(this.template({repos: this.collection.toJSON()}));
-            return this;
-        }
-    })
-
-    return Views;
+  return Views;
 });

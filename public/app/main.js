@@ -19,9 +19,7 @@ require([
 
         //If the href exists and is a hash route, or does not have http: in the href
         //run through Backbone.
-        console.log(href);
         if (href && (href.indexOf('#') === 0 || href.indexOf('http:') !== 0)) {
-            console.log('in event');
             //Stop default event to ensure we do not page refresh
             evt.preventDefault();
             //Time to navigate!
