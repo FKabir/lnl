@@ -9,8 +9,21 @@ function(app, Backbone) {
 
   var Views = {};
 
+  Views.TaskList = Backbone.View.extend({
+    template: JST["attask-tasklist"],
+    className: "tasks",
+
+    initialize: function(options) {
+        this.collection = options.collection;
+        this.collection.on('reset', this.render, this);
+    },
+
+    render: function() {
+        this.$el.html(this.template({tasks: this.collection.toJSON()}));
+    }
+  });
+
   Views.ProjectList = Backbone.View.extend({
-    template: JST["projects"],
     className: "projects",
 
     events: {
@@ -51,7 +64,7 @@ function(app, Backbone) {
 
     render: function() {
       if (this.collection.length) {
-        this.$el.html(this.template({projects: this.collection.toJSON()}));
+        //this.$el.html(this.template({projects: this.collection.toJSON()}));
       } else {
         this.$el.html(JST["loading"]());
       }

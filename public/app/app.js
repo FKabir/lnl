@@ -10,8 +10,6 @@ define([
 
 function($, _, Backbone, JST) {
     'use strict';
-    //Our templates, ensure the global JST object is set
-    var JST = window.JST = window.JST || JST;
     //Add subview helpers to underscore template
     window.subview = function(subviewName, message) {
         if (!message) {

@@ -62,15 +62,14 @@ exports.handleHook = function(req, res) {
 
             githubResponse = JSON.parse(githubResponse);
 
-            _(githubResponse).each( function( value, key, githubResponse ) {
+            _.each(githubResponse.commits, function( value, key, githubResponse ) {
                 if (value.message) {
-
+                    console.log(value.message);
                 }
             })
 
             if (githubResponse.ref.indexOf('refs/heads') != -1) {
                 console.log(githubResponse.ref.slice(11));
-
                 res.send(githubResponse.ref);
             }
 

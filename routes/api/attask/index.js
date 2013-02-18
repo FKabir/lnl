@@ -22,7 +22,11 @@ module.exports = (function() {
         if (err) {
           res.send(401);
         } else {
-          res.send(JSON.parse(resp).data, 200);
+          if (resp != null) {
+            res.send(JSON.parse(resp).data, 200);  
+          } else {
+            refreshProjects(req, res);
+          }
         }
       })
     } else {
@@ -106,7 +110,7 @@ module.exports = (function() {
       } else {
         req.session.attasksession = resp.data.sessionID;
         req.session.attaskuserid = resp.data.userID;
-        res.send('Session established.', 200);
+        refreshProjects(req, res)
       }
     })
   }
