@@ -45,7 +45,7 @@ module.exports = function(app) {
 
           client.hmset('users:' + profile.id, profile, function(err, resp) {
               if (err) {
-                  res.send('Error: ' + err, 400);
+                  done(err);
               } else {
                   client.sadd('users', profile.id);
                   return done(null, profile);
