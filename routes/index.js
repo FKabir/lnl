@@ -56,12 +56,14 @@ exports.teardownHubbub = function(req, res) {
 
 exports.handleHook = function(req, res) {
   var fs = require('fs');
+  var githubResponse = fs.readFileSync('test.json', 'utf8');
+  var header = {"X-Github-Event": "push"};
   var ghc = new gh();
 
 
-  switch (req.headers["X-Github-Event"]) {
+  switch (header["X-Github-Event"]) {
     case "push":
-      githubResponse = JSON.parse(req.body);
+      githubResponse = JSON.parse(githubResponse);
 
       var pushDetails = {};
       pushDetails.name = githubResponse.repository.name;
@@ -95,11 +97,10 @@ exports.handleHook = function(req, res) {
                     callback(err);
                   } else {
                     if (commit.message) {
-                      var regexp = new RegExp('^(.+):([0-9]+\.[0-9]+)', 'gm');
+                      var regexp = new RegExp('^(.+):([0-9]+(\.[0-9]+)?)', 'gm');
                       var matches = regexp.exec(commit.message);
                       var taskName = matches[1];
                       var taskHours = parseFloat(matches[2], 10);
-
                       if (pushDetails.users[userId] == undefined) {
                         var obj = {
                           name: commit.author.username,
