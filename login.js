@@ -60,7 +60,7 @@ module.exports = function(app) {
 
     app.get('/auth/github', passport.authenticate('github'), function(req, res) {
       //The request will be redirected to Github for authentication, so this function
-      //will not be called.
+      //will not be called. ok?
     });
 
     app.get('/auth/github/callback', passport.authenticate('github', {failureRedirect: '/login?failed=1'}),
