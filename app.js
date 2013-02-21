@@ -70,7 +70,7 @@ module.exports = (function() {
   app.get('/user', routes.index);
   app.get('/hook/:repo/:event', routes.setupHubbub);
   //app.get('/hook/del/:repo/:event', routes.teardownHubbub);
-  app.get('/hook', routes.handleHook);
+  app.post('/hook', routes.handleHook);
 
   var start = function(readyCallback) {
     if (!this.server) {
