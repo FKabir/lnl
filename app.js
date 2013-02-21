@@ -60,7 +60,9 @@ module.exports = (function() {
   var login = require('./login')(app);
 
   app.get('/', routes.index)
-  app.post('/api/attask/session', routes.api.attask.login)
+  app.post('/api/deleteConnection', routes.api.github.deleteConnection);
+  app.post('/api/connect', routes.api.github.createConnection);
+  app.post('/api/attask/session', routes.api.attask.login);
   app.get('/api/attask/projects', routes.api.attask.getProjects);
   app.get('/api/attask/projects/resync', routes.api.attask.refreshProjects);
   app.get('/api/github/projects', routes.api.github.getProjects);

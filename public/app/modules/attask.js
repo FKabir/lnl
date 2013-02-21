@@ -12,7 +12,7 @@ function(app, Views) {
 
     //Default Model.
     AttaskList.Model = Backbone.Model.extend({
-
+        idAttribute: "ID"
     });
 
     //Default Collection.

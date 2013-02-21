@@ -9,6 +9,7 @@ require.config({
         plugins: '../js/plugins',
 
         //Libraries
+        async: '../js/vendor/async',
         jquery: '../js/vendor/jquery',
         lodash: '../js/vendor/lodash',
         backbone: '../js/vendor/backbone',

@@ -9,6 +9,10 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+.well.hover {
+    background-color: #f0f0f0;
+}
+
 .attask {
     header {
         h2 {
@@ -26,17 +30,31 @@ body {
                 top: 0;
                 right: 0;
             }
-        } 
+        }
     }
 
     .info {
 
         vertical-align: top;
 
-        h3 {    
+        h3 {
             margin: 0;
             a {
                 color: #e9a514;
+            }
+        }
+
+        table {
+            caption {
+                font-weight: bold;
+            }
+
+            tbody {
+                tr {
+                    td {
+                        display: none;
+                    }
+                }
             }
         }
     }
@@ -59,7 +77,7 @@ body {
                 top: 0;
                 right: 0;
             }
-        } 
+        }
     }
 
     .info {

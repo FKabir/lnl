@@ -21,10 +21,10 @@ function(app, Github, Attask) {
         index: function() {
             //Use and configure a 'main' layout
             app.useLayout('main').setViews({
-                "github": new Github.Views.RepoList({
+                "github": new Github.Views.Repos({
                     collection: GithubRepos
                 }),
-                "attask": new Attask.Views.ProjectList({
+                "attask": new Attask.Views.Projects({
                     collection: AttaskProjects
                 })
             });

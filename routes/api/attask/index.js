@@ -16,19 +16,46 @@ module.exports = (function() {
     return false;
   }
 
+  function getUserProjectIds(id, done) {
+    client.smembers('users:' + id + ':projects', function(err, projectIds) {
+      if (err) {
+        done(err);
+      } else {
+        done(null, projectIds);
+      }
+    });
+  }
+
   function getProjects(req, res) {
-    if (sessID = getSession(req)) {
-      client.get('attask:' + req.session.attaskuserid + ':data', function(err, resp) {
-        if (err) {
-          res.send(401);
-        } else {
-          if (resp != null) {
-            res.send(JSON.parse(resp).data, 200);  
-          } else {
-            refreshProjects(req, res);
+    if (sessID = getSession(req) && req.user) {
+      var projects = [];
+      getUserProjectIds(req.user.id, function(err, projectIds) {
+        async.each(projectIds,
+          function(projectId, done) {
+            client.hgetall('users:' + req.user.id + ':projects:' + projectId, function(err, project) {
+              if (err) {
+                done(err);
+              } else {
+                project.tasks = JSON.parse(project.tasks);
+                projects.push(project);
+                done(null);
+              }
+            });
+          },
+          function(err) {
+            if (err) {
+              res.send(401);
+            } else {
+              if (projects.length) {
+                res.send(projects, 200);
+              } else {
+                refreshProjects(req, res);
+              }
+
+            }
           }
-        }
-      })
+        )
+      });
     } else {
       res.send(401);
     }
@@ -42,23 +69,35 @@ module.exports = (function() {
 
       async.auto({
         clear_projects: function(callback) {
-          client.del('attask:' + req.session.attaskuserid + ':data',
-            function(err, resp) {
-              if (err) {
-                callback(err);
-              } else {
-                callback(null);
+          getUserProjectIds(req.user.id, function(err, repoIds) {
+            client.del('users:' + req.user.id + ':projects');
+            async.each(repoIds,
+              function(repoId, done) {
+                client.del('users:' + req.user.id + ':projects:' + repoId, function(err) {
+                  if (err) {
+                    done(err);
+                  } else {
+                    done(null);
+                  }
+                });
+              },
+              function(err) {
+                if (err) {
+                  callback(err);
+                } else {
+                  callback(null);
+                }
               }
-            }
-          );
+            );
+          });
         },
         get_projects: function(callback) {
-          atc.getProjects(function(err, resp) {
+          atc.getProjects(function(err, projects) {
             if (err) {
               callback(err);
             } else {
-              resp.data.sum_hours = 0;
-              _.each(resp.data, function(project) {
+              projects.data.sum_hours = 0;
+              _.each(projects.data, function(project) {
                 project.sum_hours = 0;
                 _.each(project.tasks, function(task) {
                   task.sum_hours = 0;
@@ -67,29 +106,46 @@ module.exports = (function() {
                   });
                   project.sum_hours += task.sum_hours;
                 });
-                resp.data.sum_hours += project.sum_hours;
+                projects.data.sum_hours += project.sum_hours;
               });
-              callback(null, resp);
+              callback(null, projects.data);
             }
           })
         },
         save_projects: ['clear_projects', 'get_projects', function(callback, results) {
-          client.set('attask:' + req.session.attaskuserid + ':data',
-            JSON.stringify(results.get_projects),
-            function(err, resp) {
+          var projects = results.get_projects;
+          async.each(projects,
+            function(project, done) {
+              project.tasks = JSON.stringify(project.tasks);
+              client.hmset('users:' + req.user.id + ':projects:' + project.ID,
+                project,
+                function(err, resp) {
+                  project.tasks = JSON.parse(project.tasks);
+                  console.log(resp);
+                  console.log(err);
+                  if (err) {
+                    done(err);
+                  } else {
+                    client.sadd('users:' + req.user.id + ':projects', project.ID);
+                    done(null);
+                  }
+                }
+              );
+            },
+            function(err) {
               if (err) {
                 callback(err);
               } else {
-                callback(null)
+                callback(null, projects);
               }
             }
-          )
+          );
         }],
       }, function(err, results) {
         if (err) {
           res.send(err, 401);
         } else {
-          res.send(results.get_projects.data, 200);
+          res.send(results.get_projects, 200);
         }
       });
     }
@@ -99,20 +155,26 @@ module.exports = (function() {
     console.log(req.params);
     console.log(req.query);
 
-    var client = new at({
+    var atc = new at({
       "username": req.body.username,
       "password": req.body.password
     });
 
-    client.login(function(err, resp) {
-      if (err) {
+    atc.login(function(err, resp) {
+      if (!req.user) {
+        res.send(401);
+      } else if (err) {
         res.send(err, 400);
       } else {
         req.session.attasksession = resp.data.sessionID;
         req.session.attaskuserid = resp.data.userID;
+        client.set('users:' + req.user.id + ':attasksession', resp.data.sessionID);
+        client.set('users:' + req.user.id + ':attaskuserid', resp.data.userID);
+        client.set('users:' + req.user.id + ':attaskusername', req.body.username);
+        client.set('users:' + req.user.id + ':attaskpassword', req.body.password);
         refreshProjects(req, res)
       }
-    })
+    });
   }
 
   return {

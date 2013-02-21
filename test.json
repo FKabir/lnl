@@ -67,7 +67,29 @@
       "url": "https://github.com/jamie-stackhouse/lnl/commit/d6ed19b914a14d04b02acf04edbb6a0126ce49e5",
       "id": "d6ed19b914a14d04b02acf04edbb6a0126ce49e5",
       "distinct": true,
-      "message": "Adding github-client to seperate repo",
+      "message": "Self study:0.5 aasdasdzxc \nWhat's going on?",
+      "committer": {
+        "name": "Jamie Stackhouse",
+        "username": "jamie-stackhouse",
+        "email": "jamie.stackhouse@teamspace.ca"
+      }
+    },
+    {
+      "modified": [
+        "package.json"
+      ],
+      "added": [],
+      "author": {
+        "name": "Jamie Stackhouse",
+        "username": "jamie-stackhouse",
+        "email": "jamie.stackhouse@teamspace.ca"
+      },
+      "removed": [],
+      "timestamp": "2013-02-08T10:28:29-08:00",
+      "url": "https://github.com/jamie-stackhouse/lnl/commit/d6ed19b914a14d04b02acf04edbb6a0126ce49e5",
+      "id": "d6ed19b914a14d04b02acf04edbb6a0126ce49e5",
+      "distinct": true,
+      "message": "Self-directed study:2.5 aasdasdzxc \nWhat's going on?",
       "committer": {
         "name": "Jamie Stackhouse",
         "username": "jamie-stackhouse",

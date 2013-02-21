@@ -1,0 +1,24 @@
+<table class="table table-striped table-condensed">
+  <caption>Project Tasks - <span>Open</span></caption>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Hours</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for(var i = 0; i < model.get('tasks').length; i++) { %>
+      <% var task = model.get('tasks')[i] %>
+      <tr>
+        <td><%= task.name %></td>
+        <td><%= task.sum_hours %></td>
+      </tr>
+    <% } %>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>Total</td>
+      <td><%= model.get('sum_hours') %></td>
+    </tr>
+  </tfoot>
+</table>
