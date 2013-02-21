@@ -71,7 +71,7 @@ module.exports = (function() {
   app.get('/hook/:repo/:event', routes.setupHubbub);
   //app.get('/hook/del/:repo/:event', routes.teardownHubbub);
   //It is now post and live!
-  app.get('/hook', routes.handleHook);
+  app.post('/hook', routes.handleHook);
 
   var start = function(readyCallback) {
     if (!this.server) {
