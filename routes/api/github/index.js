@@ -5,7 +5,7 @@ config = require('../../../config'),
 redis = require('redis'),
 client = redis.createClient(),
 async = require('async'),
-gh = require('github-client');
+Gh = require('github-client');
 
 //Helper Functions
 function getUserRepoIds(id, done) {
@@ -15,7 +15,21 @@ function getUserRepoIds(id, done) {
     } else {
       done(null, repoIds);
     }
-  })
+  });
+}
+
+function connectRepo2Project(req, attaskId, project, repo, callback) {
+  if (attaskId) {
+    client.hgetall('users:' + req.user.id + ':projects:' + attaskId,
+      function(err, project) {
+        project.tasks = JSON.parse(project.tasks);
+        repo.connectedTo = project;
+        callback(null);
+      }
+    );
+  } else {
+    callback(null);
+  }
 }
 
 function createRepoConnection(userId, repoId, attaskId, done) {
@@ -32,29 +46,33 @@ function createRepoConnection(userId, repoId, attaskId, done) {
 }
 
 function getRepoConnection(userId, repoId, done) {
-  client.get('users:' + userId + ':connection:' + repoId, function(err, attaskId) {
-    if (err) {
-      done(err);
-    } else {
-      done(null, attaskId);
+  client.get('users:' + userId + ':connection:' + repoId,
+    function(err, attaskId) {
+      if (err) {
+        done(err);
+      } else {
+        done(null, attaskId);
+      }
     }
-  });
+  );
 }
 
 function removeRepoConnection(userId, repoId, done) {
-  client.del('users:' + userId + ':connection:' + repoId, function(err, result) {
-    if (err) {
-      done(err);
-    } else {
-      done(null, result);
+  client.del('users:' + userId + ':connection:' + repoId,
+    function(err, result) {
+      if (err) {
+        done(err);
+      } else {
+        done(null, result);
+      }
     }
-  });
+  );
 }
 
 function refreshRepos(req, res, done) {
-  var ghc = new gh({
+  var ghc = new Gh({
     accessToken: req.session.accessToken
-  })
+  });
 
   async.waterfall([
     function(callback) {
@@ -62,13 +80,15 @@ function refreshRepos(req, res, done) {
         client.del('users:' + req.user.id + ':repos');
         async.each(repoIds,
           function(repoId, done) {
-            client.del('users:' + req.user.id + ':repos:' + repoId, function(err) {
-              if (err) {
-                done(err);
-              } else {
-                done(null);
+            client.del('users:' + req.user.id + ':repos:' + repoId,
+              function(err) {
+                if (err) {
+                  done(err);
+                } else {
+                  done(null);
+                }
               }
-            });
+            );
           },
           function(err) {
             if (err) {
@@ -77,7 +97,7 @@ function refreshRepos(req, res, done) {
               callback(null);
             }
           }
-          )
+        );
       });
     },
     function(callback) {
@@ -103,18 +123,10 @@ function refreshRepos(req, res, done) {
                     );
                   },
                   function(callback) {
-                    if (attaskId) {
-                      client.hgetall('users:' + req.user.id + ':projects:' + attaskId, function(err, project) {
-                        project.tasks = JSON.parse(project.tasks);
-                        repo.connectedTo = project;
-                        callback(null);
-                      })
-                    } else {
-                      callback(null);
-                    }
+                    connectRepo2Project(req, attaskId, project, repo, callback);
                   }
                 ], function() {
-                  done()
+                  done();
                 });
               });
             },
@@ -125,18 +137,20 @@ function refreshRepos(req, res, done) {
                 callback(null, repos);
               }
             }
-          )
+          );
         }
       });
     }
-    ], function(err, result) {
-      if (err) {
-        done(err);
-      } else {
-        done(null, result);
-      }
-    })
+  ], function(err, result) {
+    if (err) {
+      done(err);
+    } else {
+      done(null, result);
+    }
+  });
 }
+
+
 
 function isAuthenticated(req) {
   if (req.user.id) {
@@ -164,25 +178,31 @@ module.exports = (function() {
 
   function connectRepo(req, res) {
     if (req.isAuthenticated()) {
-      createRepoConnection(req.user.id, req.body.repoId, req.body.attaskId, function(err, result) {
-        if (err) {
-          res.send(400);
-        } else {
-          res.send(200);
+      createRepoConnection(req.user.id, req.body.repoId, req.body.attaskId,
+        function(err, result) {
+          if (err) {
+            res.send(400);
+          } else {
+            res.send(200);
+          }
         }
-      })
+      );
     }
   }
 
+
+
   function removeConnection(req, res) {
     if (req.isAuthenticated()) {
-      removeRepoConnection(req.user.id, req.body.repoId, function(err, result) {
-        if (err) {
-          res.send(400);
-        } else {
-          res.send(200);
+      removeRepoConnection(req.user.id, req.body.repoId,
+        function(err, result) {
+          if (err) {
+            res.send(400);
+          } else {
+            res.send(200);
+          }
         }
-      })
+      );
     }
   }
 
@@ -193,27 +213,33 @@ module.exports = (function() {
 
         async.each(repoIds,
           function(repoId, done) {
-            client.hgetall('users:' + req.user.id + ':repos:' + repoId, function(err, reply) {
-              if (err) {
-                done(err);
-              } else {
-                reply.owner = JSON.parse(reply.owner);
-                reply.permissions = JSON.parse(reply.permissions);
-                getRepoConnection(req.user.id, repoId, function(err, attaskId) {
-                  if (attaskId) {
-                    client.hgetall('users:' + req.user.id + ':projects:' + attaskId, function(err, project) {
-                      project.tasks = JSON.parse(project.tasks);
-                      reply.connectedTo = project;
-                      repos.push(reply);
-                      done(null);
-                    })
-                  } else {
-                    repos.push(reply);
-                    done(null);
-                  }
-                });
+            client.hgetall('users:' + req.user.id + ':repos:' + repoId,
+              function(err, reply) {
+                if (err) {
+                  done(err);
+                } else {
+                  reply.owner = JSON.parse(reply.owner);
+                  reply.permissions = JSON.parse(reply.permissions);
+                  getRepoConnection(req.user.id, repoId,
+                    function(err, attaskId) {
+                      if (attaskId) {
+                        client.hgetall('users:' + req.user.id + ':projects:' +
+                          attaskId,
+                          function(err, project) {
+                          project.tasks = JSON.parse(project.tasks);
+                          reply.connectedTo = project;
+                          repos.push(reply);
+                          done(null);
+                        })
+                      } else {
+                        repos.push(reply);
+                        done(null);
+                      }
+                    }
+                  );
+                }
               }
-            })
+            );
           },
           function(err) {
             if (err) {
@@ -245,5 +271,5 @@ module.exports = (function() {
     deleteConnection: removeConnection,
     refreshProjects: refreshProjects,
     getProjects: getProjects
-  }
+  };
 }());

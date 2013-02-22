@@ -1,11 +1,12 @@
-var _ = require('lodash');
-var config = require('../../../config');
-var redis = require('redis');
-var client = redis.createClient();
-var async = require('async');
-var at = require('attask-client');
-
 module.exports = (function() {
+  'use strict';
+
+  //Module dependencies
+  var _ = require('lodash');
+  var redis = require('redis');
+  var client = redis.createClient();
+  var async = require('async');
+  var At = require('attask-client');
 
   var sessID;
 
@@ -27,20 +28,23 @@ module.exports = (function() {
   }
 
   function getProjects(req, res) {
-    if (sessID = getSession(req) && req.user) {
+    sessID = getSession(req);
+    if (sessID && req.user) {
       var projects = [];
       getUserProjectIds(req.user.id, function(err, projectIds) {
         async.each(projectIds,
           function(projectId, done) {
-            client.hgetall('users:' + req.user.id + ':projects:' + projectId, function(err, project) {
-              if (err) {
-                done(err);
-              } else {
-                project.tasks = JSON.parse(project.tasks);
-                projects.push(project);
-                done(null);
+            client.hgetall('users:' + req.user.id + ':projects:' + projectId,
+              function(err, project) {
+                if (err) {
+                  done(err);
+                } else {
+                  project.tasks = JSON.parse(project.tasks);
+                  projects.push(project);
+                  done(null);
+                }
               }
-            });
+            );
           },
           function(err) {
             if (err) {
@@ -54,7 +58,7 @@ module.exports = (function() {
 
             }
           }
-        )
+        );
       });
     } else {
       res.send(401);
@@ -62,24 +66,26 @@ module.exports = (function() {
   }
 
   function refreshProjects(req, res) {
-    if (sessID = getSession(req)) {
-      var atc = new at({
+    sessID = getSession(req);
+    if (sessID && req.user) {
+      var atc = new At({
         "sessionID": sessID
-      })
-
+      });
       async.auto({
-        clear_projects: function(callback) {
+        clearProjects: function(callback) {
           getUserProjectIds(req.user.id, function(err, repoIds) {
             client.del('users:' + req.user.id + ':projects');
             async.each(repoIds,
               function(repoId, done) {
-                client.del('users:' + req.user.id + ':projects:' + repoId, function(err) {
-                  if (err) {
-                    done(err);
-                  } else {
-                    done(null);
+                client.del('users:' + req.user.id + ':projects:' + repoId,
+                  function(err) {
+                    if (err) {
+                      done(err);
+                    } else {
+                      done(null);
+                    }
                   }
-                });
+                );
               },
               function(err) {
                 if (err) {
@@ -91,71 +97,72 @@ module.exports = (function() {
             );
           });
         },
-        get_projects: function(callback) {
+        getProjects: function(callback) {
           atc.getProjects(function(err, projects) {
             if (err) {
               callback(err);
             } else {
-              projects.data.sum_hours = 0;
+              projects.data.sumHours = 0;
               _.each(projects.data, function(project) {
-                project.sum_hours = 0;
+                project.sumHours = 0;
                 _.each(project.tasks, function(task) {
-                  task.sum_hours = 0;
+                  task.sumHours = 0;
                   _.each(task.hours, function(hour) {
-                    task.sum_hours += hour.hours;
+                    task.sumHours += hour.hours;
                   });
-                  project.sum_hours += task.sum_hours;
+                  project.sumHours += task.sumHours;
                 });
-                projects.data.sum_hours += project.sum_hours;
+                projects.data.sumHours += project.sumHours;
               });
               callback(null, projects.data);
             }
-          })
+          });
         },
-        save_projects: ['clear_projects', 'get_projects', function(callback, results) {
-          var projects = results.get_projects;
-          async.each(projects,
-            function(project, done) {
-              project.tasks = JSON.stringify(project.tasks);
-              client.hmset('users:' + req.user.id + ':projects:' + project.ID,
-                project,
-                function(err, resp) {
-                  project.tasks = JSON.parse(project.tasks);
-                  console.log(resp);
-                  console.log(err);
-                  if (err) {
-                    done(err);
-                  } else {
-                    client.sadd('users:' + req.user.id + ':projects', project.ID);
-                    done(null);
+        saveProjects: ['clearProjects', 'getProjects',
+          function(callback, results) {
+            var projects = results.getProjects;
+            async.each(projects,
+              function(project, done) {
+                project.tasks = JSON.stringify(project.tasks);
+                client.hmset('users:' + req.user.id + ':projects:' + project.ID,
+                  project,
+                  function(err, resp) {
+                    project.tasks = JSON.parse(project.tasks);
+                    console.log(resp);
+                    console.log(err);
+                    if (err) {
+                      done(err);
+                    } else {
+                      client.sadd('users:' + req.user.id + ':projects',
+                        project.ID
+                      );
+                      done(null);
+                    }
                   }
+                );
+              },
+              function(err) {
+                if (err) {
+                  callback(err);
+                } else {
+                  callback(null, projects);
                 }
-              );
-            },
-            function(err) {
-              if (err) {
-                callback(err);
-              } else {
-                callback(null, projects);
               }
-            }
-          );
-        }],
+            );
+          }
+        ],
       }, function(err, results) {
         if (err) {
           res.send(err, 401);
         } else {
-          res.send(results.get_projects, 200);
+          res.send(results.getProjects, 200);
         }
       });
     }
   }
 
   function storeSession(req, res) {
-    console.log(req.params);
-    console.log(req.query);
-
-    var atc = new at({
+    var atc = new At({
       "username": req.body.username,
       "password": req.body.password
     });
@@ -168,11 +175,19 @@ module.exports = (function() {
       } else {
         req.session.attasksession = resp.data.sessionID;
         req.session.attaskuserid = resp.data.userID;
-        client.set('users:' + req.user.id + ':attasksession', resp.data.sessionID);
-        client.set('users:' + req.user.id + ':attaskuserid', resp.data.userID);
-        client.set('users:' + req.user.id + ':attaskusername', req.body.username);
-        client.set('users:' + req.user.id + ':attaskpassword', req.body.password);
-        refreshProjects(req, res)
+        client.set('users:' + req.user.id + ':attasksession',
+          resp.data.sessionID
+        );
+        client.set('users:' + req.user.id + ':attaskuserid',
+          resp.data.userID
+        );
+        client.set('users:' + req.user.id + ':attaskusername',
+          req.body.username
+        );
+        client.set('users:' + req.user.id + ':attaskpassword',
+          req.body.password
+        );
+        refreshProjects(req, res);
       }
     });
   }
@@ -181,5 +196,5 @@ module.exports = (function() {
     login: storeSession,
     getProjects: getProjects,
     refreshProjects: refreshProjects
-  }
+  };
 }());
